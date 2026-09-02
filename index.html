@@ -1,0 +1,685 @@
+<title>Diagnóstico Pantera Brasil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ml-yellow:#FFE600;
+    --ink:#1a1a1a;
+    --ink-soft:#5b5b57;
+    --ink-faint:#8a8a83;
+    --paper:#f4f3ef;
+    --card:#ffffff;
+    --card-2:#faf9f5;
+    --line:#e4e1d6;
+    --brand:#2662c9;
+    --brand-soft:#eaf1fd;
+    --good:#00874a;
+    --good-soft:#e2f5ea;
+    --warn:#b46a00;
+    --warn-soft:#fdf0dc;
+    --bad:#c22a1e;
+    --bad-soft:#fce9e6;
+    --tier-red:#e6564a;
+    --tier-orange:#f39a3d;
+    --tier-yellow:#f4c81f;
+    --tier-lgreen:#8fd48a;
+    --tier-green:#2f9e56;
+    --shadow: 0 1px 2px rgba(26,26,26,.04), 0 8px 24px -12px rgba(26,26,26,.14);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#f0efe9;
+      --ink-soft:#c3c1b7;
+      --ink-faint:#8d8c83;
+      --paper:#18181a;
+      --card:#212124;
+      --card-2:#26262a;
+      --line:#37373b;
+      --brand:#7fabf5;
+      --brand-soft:#20293b;
+      --good:#4fce8c;
+      --good-soft:#1c3327;
+      --warn:#f0b94a;
+      --warn-soft:#3a2c12;
+      --bad:#f18072;
+      --bad-soft:#3a201d;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#f0efe9;
+    --ink-soft:#c3c1b7;
+    --ink-faint:#8d8c83;
+    --paper:#18181a;
+    --card:#212124;
+    --card-2:#26262a;
+    --line:#37373b;
+    --brand:#7fabf5;
+    --brand-soft:#20293b;
+    --good:#4fce8c;
+    --good-soft:#1c3327;
+    --warn:#f0b94a;
+    --warn-soft:#3a2c12;
+    --bad:#f18072;
+    --bad-soft:#3a201d;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Source Sans 3", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{
+    font-family:"Manrope", ui-sans-serif, system-ui, sans-serif;
+    text-wrap:balance;
+    color:var(--ink);
+    margin:0;
+  }
+  .mono{ font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace; font-variant-numeric: tabular-nums; }
+  a{ color:var(--brand); }
+  p{ margin:0 0 .7em; color:var(--ink-soft); }
+  p:last-child{ margin-bottom:0; }
+
+  .wrap{ max-width:960px; margin:0 auto; padding:0 20px; }
+
+  /* ===== Masthead ===== */
+  .masthead{
+    background:var(--ink);
+    color:var(--paper);
+    border-bottom:5px solid var(--ml-yellow);
+  }
+  :root[data-theme="dark"] .masthead, @media (prefers-color-scheme: dark){ }
+  .masthead-inner{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:22px 20px 20px;
+    flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{
+    width:34px; height:34px; border-radius:9px; background:var(--ml-yellow);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Manrope"; font-weight:800; font-size:15px; color:var(--ink); flex:none;
+  }
+  .brand-text{ line-height:1.15; }
+  .brand-text .name{ font-family:"Manrope"; font-weight:800; font-size:15px; letter-spacing:.02em; color:#fff; }
+  .brand-text .tag{ font-size:12px; color:#c9c8c1; }
+  .client-pill{
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    padding:8px 14px 8px 8px; border-radius:999px;
+  }
+  .client-pill .avatar{
+    width:26px; height:26px; border-radius:50%; background:var(--tier-yellow);
+    display:flex; align-items:center; justify-content:center; font-size:14px; flex:none;
+  }
+  .client-pill .lbl{ font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:#a9a8a1; display:block; }
+  .client-pill .val{ font-family:"Manrope"; font-weight:700; font-size:13.5px; color:#fff; }
+
+  .title-block{ padding:8px 20px 30px; }
+  .title-block h1{ color:#fff; font-size:clamp(26px,5.2vw,38px); font-weight:800; max-width:16ch; }
+  .title-block .sub{ color:#d4d3cb; margin-top:8px; font-size:15px; max-width:56ch; }
+  .status-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .status-chip{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:"Manrope"; font-weight:700; font-size:12.5px;
+    padding:7px 12px; border-radius:8px;
+  }
+  .status-chip.now{ background:var(--tier-lgreen); color:#173418; }
+  .status-chip.risk{ background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.22); }
+  .status-chip .dot{ width:8px; height:8px; border-radius:50%; }
+
+  /* ===== quick nav ===== */
+  .quicknav{
+    position:sticky; top:0; z-index:20;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .quicknav-inner{
+    display:flex; gap:8px; overflow-x:auto; padding:10px 20px;
+    scrollbar-width:none;
+  }
+  .quicknav-inner::-webkit-scrollbar{ display:none; }
+  .quicknav a{
+    flex:none; text-decoration:none; color:var(--ink-soft);
+    font-size:13px; font-weight:600; font-family:"Manrope";
+    padding:7px 12px; border-radius:999px; border:1px solid var(--line);
+    background:var(--card); white-space:nowrap;
+  }
+  .quicknav a:hover{ color:var(--brand); border-color:var(--brand); }
+
+  main{ padding:36px 0 10px; display:flex; flex-direction:column; gap:52px; }
+  section{ scroll-margin-top:56px; }
+
+  .eyebrow{
+    font-family:"Manrope"; font-weight:700; font-size:11.5px; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--brand); margin-bottom:8px; display:block;
+  }
+  .sec-head{ margin-bottom:20px; max-width:64ch; }
+  .sec-head h2{ font-size:clamp(21px,3.4vw,26px); font-weight:800; }
+  .sec-head p{ margin-top:8px; font-size:15px; }
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow);
+  }
+
+  /* ===== Reputation status card ===== */
+  .rep-card{ padding:22px 22px 24px; }
+  .rep-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .rep-top .headline{ font-family:"Manrope"; font-weight:800; font-size:18px; max-width:40ch; }
+  .countdown{
+    text-align:right; flex:none;
+  }
+  .countdown .n{ font-family:"IBM Plex Mono"; font-weight:600; font-size:26px; color:var(--warn); line-height:1; }
+  .countdown .u{ font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; }
+
+  .ladder{ margin:22px 0 8px; }
+  .ladder-track{ display:flex; height:10px; border-radius:999px; overflow:hidden; }
+  .ladder-track span{ flex:1; }
+  .ladder-labels{ display:flex; margin-top:9px; position:relative; font-size:11px; }
+  .ladder-labels span{ flex:1; text-align:center; color:var(--ink-faint); }
+  .ladder-legend{ display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:14px; }
+  .legend-chip{ display:inline-flex; align-items:center; gap:6px; font-family:"Manrope"; font-weight:700; font-size:11.5px; }
+  .legend-chip i{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .legend-chip.warn{ color:var(--warn); } .legend-chip.warn i{ background:var(--warn); }
+  .legend-chip.good{ color:var(--good); } .legend-chip.good i{ background:var(--good); }
+  .legend-chip.muted{ color:var(--ink-faint); } .legend-chip.muted i{ background:var(--ink-faint); }
+
+  .rep-metrics{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-top:22px;
+  }
+  .metric{ background:var(--card); padding:14px 15px; }
+  .metric .lbl{ font-size:12px; color:var(--ink-faint); display:flex; align-items:center; gap:6px; }
+  .metric .lbl .ok{ color:var(--good); }
+  .metric .lbl .bad{ color:var(--bad); }
+  .metric .val{ font-family:"IBM Plex Mono"; font-weight:600; font-size:22px; margin-top:4px; }
+  .metric .val.bad{ color:var(--bad); }
+  .metric .val.ok{ color:var(--good); }
+  .metric .note{ font-size:11.5px; color:var(--ink-faint); margin-top:2px; }
+
+  .reqs{ margin-top:22px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .reqs .ring{
+    width:52px; height:52px; border-radius:50%; flex:none;
+    background:conic-gradient(var(--good) 0deg 240deg, var(--line) 240deg 360deg);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .reqs .ring::after{
+    content:"2/3"; width:40px; height:40px; border-radius:50%; background:var(--card);
+    display:flex; align-items:center; justify-content:center; font-family:"IBM Plex Mono"; font-size:13px; font-weight:600;
+  }
+  .req-list{ display:flex; flex-wrap:wrap; gap:8px 18px; font-size:13.5px; }
+  .req-list span{ display:inline-flex; align-items:center; gap:6px; }
+  .req-list b{ color:var(--good); }
+  .req-list .pending b{ color:var(--warn); }
+
+  /* ===== Diagnostic cards ===== */
+  .diag-grid{ display:flex; flex-direction:column; gap:14px; }
+  .diag{ padding:20px 22px; display:flex; gap:16px; }
+  .diag .num{
+    font-family:"IBM Plex Mono"; font-weight:600; font-size:13px; color:var(--ink-faint);
+    flex:none; width:26px; padding-top:2px;
+  }
+  .diag-body{ flex:1; min-width:0; }
+  .diag-top{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  .diag-top h3{ font-size:16.5px; font-weight:700; }
+  .sev{
+    font-family:"Manrope"; font-weight:700; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+    padding:3px 9px; border-radius:6px; flex:none;
+  }
+  .sev.critico{ background:var(--bad-soft); color:var(--bad); }
+  .sev.moderado{ background:var(--warn-soft); color:var(--warn); }
+  .sev.positivo{ background:var(--good-soft); color:var(--good); }
+  .diag.positivo{ border-color:var(--good); }
+  .diag .rec.positivo{ border-left-color:var(--good); }
+  .diag .rec{
+    margin-top:10px; padding:10px 13px; border-radius:9px; background:var(--card-2);
+    border-left:3px solid var(--brand); font-size:13.5px;
+  }
+  .diag .rec b{ color:var(--ink); }
+
+  /* ===== comparison ===== */
+  .cmp-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:680px){ .cmp-grid{ grid-template-columns:1fr 1fr; } }
+  .cmp-card{ padding:20px 20px 6px; }
+  .cmp-head{ display:flex; align-items:center; justify-content:space-between; padding-bottom:14px; border-bottom:1px solid var(--line); margin-bottom:6px; }
+  .cmp-head .who{ font-family:"Manrope"; font-weight:800; font-size:15.5px; }
+  .cmp-head .tagline{ font-size:11.5px; color:var(--ink-faint); margin-top:2px; }
+  .cmp-tag{ font-family:"Manrope"; font-weight:700; font-size:11px; padding:4px 10px; border-radius:999px; }
+  .cmp-tag.slow{ background:var(--bad-soft); color:var(--bad); }
+  .cmp-tag.fast{ background:var(--good-soft); color:var(--good); }
+  .cmp-row{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 0; border-bottom:1px dashed var(--line); font-size:13.5px; gap:10px; }
+  .cmp-row:last-child{ border-bottom:none; }
+  .cmp-row .k{ color:var(--ink-soft); }
+  .cmp-row .v{ font-family:"IBM Plex Mono"; font-weight:600; text-align:right; }
+  .cmp-card{ overflow:hidden; }
+  .cmp-note{
+    margin-top:16px; margin-inline:-20px; padding:14px 20px; background:var(--card-2);
+    font-size:13px; border-top:1px solid var(--line);
+  }
+  .insight{
+    margin-top:6px; padding:16px 20px; border-radius:12px; background:var(--brand-soft);
+    color:var(--ink); font-size:14px; border:1px solid var(--line);
+  }
+  .insight b{ color:var(--brand); }
+
+  /* ===== financial ===== */
+  .fin-hero{
+    display:flex; gap:24px; align-items:center; padding:26px 24px; flex-wrap:wrap;
+  }
+  .fin-hero .big{ font-family:"IBM Plex Mono"; font-weight:600; font-size:clamp(38px,7vw,54px); color:var(--good); line-height:1; }
+  .fin-hero .cap{ max-width:34ch; }
+  .fin-hero .cap .lead{ font-family:"Manrope"; font-weight:700; font-size:14.5px; color:var(--ink); }
+  .fin-hero .cap p{ margin-top:4px; font-size:13px; }
+
+  .fin-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .fin-table th, .fin-table td{ padding:11px 14px; text-align:right; border-bottom:1px solid var(--line); }
+  .fin-table th:first-child, .fin-table td:first-child{ text-align:left; }
+  .fin-table thead th{ font-family:"Manrope"; font-weight:700; font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.03em; }
+  .fin-table td{ font-family:"IBM Plex Mono"; font-weight:500; }
+  .fin-table td:first-child{ font-family:"Source Sans 3"; font-weight:600; color:var(--ink-soft); }
+  .fin-table tr.total td{ font-weight:700; color:var(--ink); border-top:2px solid var(--ink); border-bottom:none; }
+  .fin-table .neg{ color:var(--bad); }
+  .fin-table .col-premium{ color:var(--ink-faint); }
+  .fin-table .col-classico{ color:var(--good); }
+  .fin-wrap-scroll{ overflow-x:auto; }
+  .fin-foot{ padding:16px 24px 20px; font-size:12.5px; color:var(--ink-faint); border-top:1px solid var(--line); }
+
+  .sim-strip{
+    display:flex; gap:14px; padding:18px 22px; flex-wrap:wrap; align-items:center;
+    background:var(--card-2); border-top:1px solid var(--line);
+  }
+  .sim-strip .chip{ font-family:"Manrope"; font-weight:700; font-size:11.5px; background:var(--warn-soft); color:var(--warn); padding:4px 10px; border-radius:999px; flex:none; }
+  .sim-strip .txt{ font-size:13px; color:var(--ink-soft); flex:1; min-width:220px; }
+  .sim-strip .nums{ display:flex; gap:18px; font-family:"IBM Plex Mono"; font-size:13.5px; }
+  .sim-strip .nums div span{ display:block; font-size:10px; color:var(--ink-faint); font-family:"Source Sans 3"; }
+
+  /* ===== roadmap ===== */
+  .phase{ display:flex; gap:18px; }
+  .phase + .phase{ margin-top:0; }
+  .phase-rail{ display:flex; flex-direction:column; align-items:center; flex:none; }
+  .phase-rail .dot{
+    width:36px; height:36px; border-radius:50%; background:var(--brand); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-family:"Manrope"; font-weight:800; font-size:14px;
+  }
+  .phase-rail .line{ width:2px; flex:1; background:var(--line); margin:6px 0; }
+  .phase:last-child .phase-rail .line{ display:none; }
+  .phase-body{ padding-bottom:34px; flex:1; }
+  .phase-body h3{ font-size:17px; font-weight:800; margin-bottom:3px; }
+  .phase-body .when{ font-size:12px; color:var(--ink-faint); font-weight:600; margin-bottom:12px; display:block; }
+  .phase-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .phase-list li{
+    display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-soft);
+    background:var(--card); border:1px solid var(--line); border-radius:9px; padding:10px 13px;
+  }
+  .phase-list li .ico{ flex:none; color:var(--brand); font-weight:700; }
+  .phase-goal{
+    margin-top:12px; font-size:13px; padding:10px 13px; border-radius:9px;
+    background:var(--good-soft); color:var(--good); font-weight:600;
+  }
+
+  /* ===== checklist ===== */
+  .checklist{ display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .check-item{ display:flex; gap:12px; align-items:flex-start; background:var(--card); padding:13px 16px; }
+  .check-item .box{ width:18px; height:18px; border-radius:5px; border:2px solid var(--brand); flex:none; margin-top:2px; }
+  .check-item .t{ font-size:14px; }
+  .check-item .t b{ color:var(--ink); }
+
+  footer{ margin-top:8px; padding:26px 0 44px; border-top:1px solid var(--line); }
+  footer .fbrand{ font-family:"Manrope"; font-weight:800; font-size:13px; }
+  footer .fnote{ font-size:12.5px; color:var(--ink-faint); margin-top:6px; max-width:60ch; }
+
+  @media (max-width:520px){
+    .masthead-inner{ padding:18px 16px 16px; }
+    .title-block{ padding:6px 16px 26px; }
+    .wrap{ padding:0 16px; }
+    .rep-card{ padding:18px 16px 20px; }
+    .diag{ padding:16px; gap:12px; }
+    .cmp-card{ padding:16px 16px 4px; }
+    .fin-hero{ padding:20px 18px; }
+    .fin-foot{ padding:14px 18px 18px; }
+  }
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner wrap" style="max-width:960px;margin:0 auto;padding-left:20px;padding-right:20px;">
+    <div class="brand">
+      <div class="brand-mark">37</div>
+      <div class="brand-text">
+        <div class="name">HUB37</div>
+        <div class="tag">Gestão de contas · Mercado Livre</div>
+      </div>
+    </div>
+    <div class="client-pill">
+      <div class="avatar">🐆</div>
+      <div>
+        <span class="lbl">Cliente</span>
+        <span class="val">Pantera Brasil</span>
+      </div>
+    </div>
+  </div>
+  <div class="title-block wrap">
+    <h1>Diagnóstico de conta &amp; plano de recuperação</h1>
+    <p class="sub">Leitura da reputação, do anúncio e da concorrência direta da loja, com uma rota objetiva para sair do amarelo e parar de deixar margem na mesa em cada venda.</p>
+    <div class="status-row">
+      <span class="status-chip now"><span class="dot" style="background:#173418"></span>Exibindo verde-claro (benefício ativo)</span>
+      <span class="status-chip risk"><span class="dot" style="background:var(--tier-yellow)"></span>Métrica real: amarelo · 11 dias para expirar</span>
+    </div>
+  </div>
+</div>
+
+<nav class="quicknav">
+  <div class="quicknav-inner wrap" style="max-width:960px;margin:0 auto;padding-left:20px;padding-right:20px;">
+    <a href="#status">Reputação</a>
+    <a href="#diagnostico">Diagnóstico</a>
+    <a href="#comparativo">Pantera × Mova</a>
+    <a href="#financeiro">Simulação financeira</a>
+    <a href="#estrategia">Estratégia</a>
+    <a href="#acoes">Plano de ação</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section id="status">
+    <div class="sec-head">
+      <span class="eyebrow">01 — Situação atual</span>
+      <h2>A cor verde-claro está sendo sustentada por um benefício, não pelos números</h2>
+      <p>Nos últimos 365 dias (01/set/2025 a hoje) a loja fechou 30 vendas, 17 delas com envio via Mercado Livre. Dois dos três requisitos de reputação já estão dentro da meta — o terceiro é quem está segurando a cor.</p>
+    </div>
+
+    <div class="card rep-card">
+      <div class="rep-top">
+        <div class="headline">Sem o benefício, a loja apareceria em amarelo para os compradores</div>
+        <div class="countdown">
+          <div class="n mono">11</div>
+          <div class="u">dias restantes</div>
+        </div>
+      </div>
+
+      <div class="ladder">
+        <div class="ladder-track">
+          <span style="background:var(--tier-red)"></span>
+          <span style="background:var(--tier-orange)"></span>
+          <span style="background:var(--tier-yellow)"></span>
+          <span style="background:var(--tier-lgreen)"></span>
+          <span style="background:var(--tier-green)"></span>
+        </div>
+        <div class="ladder-labels">
+          <span>Vermelho</span><span>Laranja</span><span>Amarelo</span><span>Verde-claro</span><span>Verde</span>
+        </div>
+        <div class="ladder-legend">
+          <span class="legend-chip warn"><i></i>Real hoje: amarelo</span>
+          <span class="legend-chip good"><i></i>Exibida por benefício: verde-claro</span>
+          <span class="legend-chip muted"><i></i>Próxima meta: verde</span>
+        </div>
+      </div>
+
+      <div class="rep-metrics">
+        <div class="metric">
+          <div class="lbl">Vendas (365 dias)</div>
+          <div class="val mono">30</div>
+          <div class="note">17 com envios rastreados</div>
+        </div>
+        <div class="metric">
+          <div class="lbl"><span class="ok">●</span> Reclamações</div>
+          <div class="val ok mono">0%</div>
+          <div class="note">Limite: abaixo de 2%</div>
+        </div>
+        <div class="metric">
+          <div class="lbl"><span class="ok">●</span> Canceladas por você</div>
+          <div class="val ok mono">0%</div>
+          <div class="note">Limite: abaixo de 1,5%</div>
+        </div>
+        <div class="metric">
+          <div class="lbl"><span class="bad">●</span> Envios incorretos</div>
+          <div class="val bad mono">11,76%</div>
+          <div class="note">2 de 17 envios · limite: abaixo de 10%</div>
+        </div>
+      </div>
+
+      <div class="reqs">
+        <div class="ring"></div>
+        <div class="req-list">
+          <span>Reclamações <b>✓ cumprido</b></span>
+          <span>Canceladas por você <b>✓ cumprido</b></span>
+          <span class="pending">Envios corretos <b>pendente — faltam 3 envios corretos</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="diagnostico">
+    <div class="sec-head">
+      <span class="eyebrow">02 — Diagnóstico</span>
+      <h2>Quatro pontos custando vendas e margem — e um já andando na direção certa</h2>
+      <p>Em ordem de impacto: a causa raiz da cor, o modelo de anúncio que reduz o repasse, um custo embutido que ninguém pediu, a imagem que não fala mais com o momento do comprador — e a Minha Página, que já está ativa como base para reter seguidores e rodar campanhas promocionais.</p>
+    </div>
+
+    <div class="diag-grid">
+      <div class="card diag">
+        <div class="num">01</div>
+        <div class="diag-body">
+          <div class="diag-top"><h3>Envios incorretos acima do permitido</h3><span class="sev critico">Crítico</span></div>
+          <p>11,76% dos envios (2 de 17) chegaram fora do padrão, contra um limite de 10%. É o único indicador fora da meta e o motivo de a conta depender de um benefício temporário em vez de reputação conquistada — restam 11 dias e tolerância para mais 5 vendas afetadas antes de cair para amarelo de verdade.</p>
+          <div class="rec"><b>Ação:</b> priorizar despacho dentro do prazo e conferência de etiqueta/endereço nas próximas vendas. São necessários 3 envios corretos para fechar o requisito e estabilizar a cor.</div>
+        </div>
+      </div>
+
+      <div class="card diag">
+        <div class="num">02</div>
+        <div class="diag-body">
+          <div class="diag-top"><h3>Anúncio Premium + frete grátis num ticket de R$39,90</h3><span class="sev critico">Crítico</span></div>
+          <p>No modelo atual (Premium, frete grátis), a tarifa de venda é R$7,58 e o custo de envio R$15,05 — a loja recebe R$17,27 por unidade (43%). No modelo Clássico, com frete por conta do comprador, a tarifa cai para R$5,59 e o envio para R$7,45: a loja recebe R$26,86 (67%) — no mesmo preço de venda.</p>
+          <div class="rec"><b>Ação:</b> mudar a variação para anúncio Clássico e desligar o frete grátis enquanto o ticket médio estiver abaixo de ~R$50. Ver detalhamento na seção 04.</div>
+        </div>
+      </div>
+
+      <div class="card diag">
+        <div class="num">03</div>
+        <div class="diag-body">
+          <div class="diag-top"><h3>Parcelamento sem juros embutido no anúncio Premium</h3><span class="sev moderado">Moderado</span></div>
+          <p>O anúncio Premium está oferecendo "3x sem acréscimo" em um produto de R$39,90. Praticamente ninguém parcela uma compra desse valor — e o custo desse benefício está embutido na tarifa mais alta do Premium, ou seja, a loja paga por um recurso que o comprador não usa.</p>
+          <div class="rec"><b>Ação:</b> resolvido automaticamente ao migrar para o anúncio Clássico (item 02) — o parcelamento sem juros deixa de ser aplicado.</div>
+        </div>
+      </div>
+
+      <div class="card diag">
+        <div class="num">04</div>
+        <div class="diag-body">
+          <div class="diag-top"><h3>Foto de capa fora de padrão sazonal</h3><span class="sev moderado">Moderado</span></div>
+          <p>A imagem principal usa amarelo e verde no padrão bandeira do Brasil — associação forte com Copa do Mundo ou período eleitoral. Não é ano de Copa, e as eleições não giram em torno de verde-e-amarelo o tempo todo: fora dessas janelas, a capa lê como banner promocional esquecido, não como o produto sendo vendido.</p>
+          <div class="rec"><b>Ação:</b> substituir por uma capa neutra mostrando o produto na cor efetivamente vendida (ex.: caramelo/lisa), no mesmo padrão dos concorrentes com melhor conversão.</div>
+        </div>
+      </div>
+
+      <div class="card diag positivo">
+        <div class="num">05</div>
+        <div class="diag-body">
+          <div class="diag-top"><h3>Minha Página já ativada</h3><span class="sev positivo">Em andamento</span></div>
+          <p>A ativação da Minha Página foi feita para retenção de seguidores e para dar suporte a campanhas promocionais — uma base útil justamente para a fase de recuperação, quando o preço de entrada (seção 05) precisa converter visitante em seguidor recorrente, não só em venda avulsa.</p>
+          <div class="rec positivo"><b>Ação:</b> usar a Minha Página para comunicar a campanha de R$29,90 e direcionar quem comprou a seguir a loja, sustentando o volume depois que o preço normalizar.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="comparativo">
+    <div class="sec-head">
+      <span class="eyebrow">03 — Benchmark direto</span>
+      <h2>Pantera Brasil × Loja Mova, mesmo produto</h2>
+      <p>O anúncio da Mova é 112 dias mais novo e já vende centenas de vezes mais por mês — com quase o dobro do percentual de repasse por venda. A diferença não é o produto, é o modelo de anúncio e o preço de entrada.</p>
+    </div>
+
+    <div class="cmp-grid">
+      <div class="card cmp-card">
+        <div class="cmp-head">
+          <div>
+            <div class="who">Pantera Brasil</div>
+            <div class="tagline">Anúncio próprio · criado em 08/04/2026</div>
+          </div>
+          <span class="cmp-tag slow">146 dias · quase parado</span>
+        </div>
+        <div class="cmp-row"><span class="k">Idade do anúncio</span><span class="v">146 dias</span></div>
+        <div class="cmp-row"><span class="k">Visitas</span><span class="v">29</span></div>
+        <div class="cmp-row"><span class="k">Conversão</span><span class="v">3,45%</span></div>
+        <div class="cmp-row"><span class="k">Vendas mensais</span><span class="v">0 / mês</span></div>
+        <div class="cmp-row"><span class="k">Ritmo atual</span><span class="v">0 vendas/mês</span></div>
+        <div class="cmp-row"><span class="k">Vendas totais estimadas</span><span class="v">1</span></div>
+        <div class="cmp-row"><span class="k">Comissão ML</span><span class="v">R$17,23 (34,53%)</span></div>
+        <div class="cmp-row"><span class="k">Você recebe</span><span class="v" style="color:var(--bad)">R$16,22 (32,51%)</span></div>
+        <div class="cmp-note">Faturando R$49,90 acumulado · histórico do vendedor: +5 vendas</div>
+      </div>
+
+      <div class="card cmp-card">
+        <div class="cmp-head">
+          <div>
+            <div class="who">Loja Mova</div>
+            <div class="tagline">Concorrente direto · criado em 29/07/2026</div>
+          </div>
+          <span class="cmp-tag fast">34 dias · 151 vendas/mês</span>
+        </div>
+        <div class="cmp-row"><span class="k">Idade do anúncio</span><span class="v">34 dias</span></div>
+        <div class="cmp-row"><span class="k">Visitas</span><span class="v">7.925</span></div>
+        <div class="cmp-row"><span class="k">Conversão</span><span class="v">1,26%</span></div>
+        <div class="cmp-row"><span class="k">Vendas mensais</span><span class="v">88 / mês</span></div>
+        <div class="cmp-row"><span class="k">Ritmo atual</span><span class="v">151 vendas/mês</span></div>
+        <div class="cmp-row"><span class="k">Vendas totais estimadas</span><span class="v">141</span></div>
+        <div class="cmp-row"><span class="k">Comissão ML</span><span class="v">R$5,45 (14,01%)</span></div>
+        <div class="cmp-row"><span class="k">Você recebe</span><span class="v" style="color:var(--good)">R$26,10 (67,1%)</span></div>
+        <div class="cmp-note">Faturando R$3.890,00 acumulado · histórico do vendedor: 184 vendas</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <b>Leitura:</b> a Mova converte menos por visita (1,26% contra 3,45% da Pantera), mas compensa com um volume de tráfego muito maior — e ainda assim guarda mais que o dobro do percentual de cada venda. É exatamente o padrão de preço de entrada + anúncio Clássico que a estratégia da seção 05 propõe replicar.
+    </div>
+  </section>
+
+  <section id="financeiro">
+    <div class="sec-head">
+      <span class="eyebrow">04 — Simulação financeira</span>
+      <h2>Mesmo preço, R$9,59 a mais por venda</h2>
+      <p>Comparativo real, feito na própria variação (Caramelo/lisa, 34.35 BR) a R$39,90 — só muda o tipo de anúncio e quem paga o frete.</p>
+    </div>
+
+    <div class="card">
+      <div class="fin-hero">
+        <div class="big mono">+R$9,59</div>
+        <div class="cap">
+          <div class="lead">de repasse a mais por unidade, no mesmo preço de venda</div>
+          <p>Trocando Premium + frete grátis por Clássico + frete por conta do comprador, o percentual recebido sobe de 43,28% para 67,31%.</p>
+        </div>
+      </div>
+
+      <div class="fin-wrap-scroll">
+        <table class="fin-table">
+          <thead>
+            <tr><th>R$39,90 por unidade</th><th class="col-premium">Premium + frete grátis</th><th class="col-classico">Clássico (comprador paga frete)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tarifa de venda</td><td class="neg col-premium">− R$7,58</td><td class="neg col-classico">− R$5,59</td></tr>
+            <tr><td>Custo de envio</td><td class="neg col-premium">− R$15,05</td><td class="neg col-classico">− R$7,45</td></tr>
+            <tr><td>Parcelamento sem juros</td><td class="col-premium">3x embutido</td><td class="col-classico">não se aplica</td></tr>
+            <tr class="total"><td>Você recebe</td><td class="col-premium">R$17,27 · 43,28%</td><td class="col-classico">R$26,86 · 67,31%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fin-foot">Fonte: resumo de custos do próprio anúncio, mesma variação, capturado no painel de preços e na Central de Vendedores.</div>
+
+      <div class="sim-strip">
+        <span class="chip">Referência</span>
+        <span class="txt">Simulação registrada pela loja para o patamar de R$26,90 — mesma lógica de preço de entrada aplicada em um ponto mais agressivo.</span>
+        <div class="nums">
+          <div><span class="mono">R$26,90</span><span>preço</span></div>
+          <div><span class="mono">− R$11,22</span><span>custos</span></div>
+          <div><span class="mono" style="color:var(--good)">R$15,68</span><span>recebe</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="estrategia">
+    <div class="sec-head">
+      <span class="eyebrow">05 — Estratégia de recuperação</span>
+      <h2>Três fases: recuperar a cor, normalizar o preço e virar loja oficial</h2>
+      <p>A ordem importa — o desconto existe para gerar volume e acertos de envio rápido o suficiente para fechar os 11 dias de prazo, não para virar o preço definitivo. A loja oficial é o degrau seguinte, depois que a base estiver estável.</p>
+    </div>
+
+    <div class="card" style="padding:26px 24px;">
+      <div class="phase">
+        <div class="phase-rail"><div class="dot">1</div><div class="line"></div></div>
+        <div class="phase-body">
+          <h3>Recuperação</h3>
+          <span class="when">Agora — dentro da janela de 11 dias</span>
+          <ul class="phase-list">
+            <li><span class="ico">→</span>Preço promocional de R$29,90 nas 20 primeiras vendas, para gerar volume e girar estoque rápido.</li>
+            <li><span class="ico">→</span>Trocar para anúncio Clássico, sem frete grátis, seguindo o ganho de repasse da seção 04.</li>
+            <li><span class="ico">→</span>Foco total em despacho correto e no prazo até fechar 3 envios corretos seguidos.</li>
+            <li><span class="ico">→</span>Substituir a foto de capa pela versão neutra (item 04 do diagnóstico).</li>
+          </ul>
+          <div class="phase-goal">Meta: fechar 3/3 requisitos e sair da dependência do benefício antes do prazo expirar.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-rail"><div class="dot">2</div><div class="line"></div></div>
+        <div class="phase-body">
+          <h3>Normalização</h3>
+          <span class="when">Após a cor verde-claro consolidada por conta própria</span>
+          <ul class="phase-list">
+            <li><span class="ico">→</span>Reajustar o preço de volta ao patamar de mercado de forma gradual, não de uma vez.</li>
+            <li><span class="ico">→</span>Reavaliar o Premium só se o ticket médio subir (acima de ~R$50) ou o produto precisar de frete grátis para competir.</li>
+            <li><span class="ico">→</span>Buscar avançar de verde-claro para verde: o custo de envio cai mais ~R$2 por unidade nesse patamar.</li>
+            <li><span class="ico">→</span>Replicar o padrão de preço de entrada e imagem da Mova nos demais itens do catálogo.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-rail"><div class="dot">3</div></div>
+        <div class="phase-body">
+          <h3>Loja oficial</h3>
+          <span class="when">Próximo passo, com a conta já estabilizada</span>
+          <ul class="phase-list">
+            <li><span class="ico">→</span>Dar entrada no registro de marca — basta seguir o passo a passo do <a href="https://www.youtube.com/watch?v=4FOO011LCQw&amp;t=138s" target="_blank" rel="noopener">vídeo de referência</a> (a partir de 2:18).</li>
+            <li><span class="ico">→</span>Pagar a guia do registro e aguardar o prazo de entrada — até 7 dias.</li>
+            <li><span class="ico">→</span>Baixar o arquivo do registro assim que ele for emitido.</li>
+            <li><span class="ico">→</span>Subir a loja oficial no Mercado Livre com esse arquivo.</li>
+          </ul>
+          <div class="phase-goal">Meta: sair de vendedor comum para loja oficial, com o selo de confiança e a exposição que vêm junto.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="acoes">
+    <div class="sec-head">
+      <span class="eyebrow">07 — Plano de ação</span>
+      <h2>Próximos passos, em ordem</h2>
+    </div>
+    <div class="checklist">
+      <div class="check-item"><div class="box"></div><div class="t"><b>Ajustar preço</b> da variação para R$29,90 nas próximas 20 vendas</div></div>
+      <div class="check-item"><div class="box"></div><div class="t"><b>Trocar o anúncio</b> de Premium + frete grátis para Clássico, frete por conta do comprador</div></div>
+      <div class="check-item"><div class="box"></div><div class="t"><b>Revisar processo de despacho</b> até fechar 3 envios corretos e cumprir o requisito pendente</div></div>
+      <div class="check-item"><div class="box"></div><div class="t"><b>Trocar a foto de capa</b> para uma versão neutra do produto, fora do padrão bandeira</div></div>
+      <div class="check-item"><div class="box"></div><div class="t"><b>Acompanhar a contagem regressiva</b> de 11 dias e o contador de 0/5 vendas afetadas até a cor estabilizar</div></div>
+      <div class="check-item"><div class="box"></div><div class="t"><b>Normalizar o preço</b> e reavaliar o Premium só depois da cor verde-claro conquistada por conta própria</div></div>
+      <div class="check-item"><div class="box"></div><div class="t"><b>Dar entrada no registro de marca</b> seguindo o passo a passo do vídeo de referência, pagar a guia e aguardar até 7 dias</div></div>
+      <div class="check-item"><div class="box"></div><div class="t"><b>Baixar o arquivo do registro</b> e subir a loja oficial no Mercado Livre</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="fbrand">HUB37</div>
+    <div class="fnote">Diagnóstico elaborado a partir dos painéis de Reputação, Desempenho, Central de Vendedores e da página pública do anúncio da conta Pantera Brasil, com dados capturados em 02/09/2026. Uso interno da conta — não reflete política pública do Mercado Livre.</div>
+  </footer>
+
+</main>
