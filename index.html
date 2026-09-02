@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Diagnóstico Pantera Brasil</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +31,7 @@
     --tier-lgreen:#8fd48a;
     --tier-green:#2f9e56;
     --shadow: 0 1px 2px rgba(26,26,26,.04), 0 8px 24px -12px rgba(26,26,26,.14);
+    --masthead-bg:#1a1a1a;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -92,11 +98,10 @@
 
   /* ===== Masthead ===== */
   .masthead{
-    background:var(--ink);
-    color:var(--paper);
+    background:var(--masthead-bg);
+    color:#f4f3ef;
     border-bottom:5px solid var(--ml-yellow);
   }
-  :root[data-theme="dark"] .masthead, @media (prefers-color-scheme: dark){ }
   .masthead-inner{
     display:flex; align-items:center; justify-content:space-between; gap:16px;
     padding:22px 20px 20px;
@@ -106,7 +111,7 @@
   .brand-mark{
     width:34px; height:34px; border-radius:9px; background:var(--ml-yellow);
     display:flex; align-items:center; justify-content:center;
-    font-family:"Manrope"; font-weight:800; font-size:15px; color:var(--ink); flex:none;
+    font-family:"Manrope"; font-weight:800; font-size:15px; color:var(--masthead-bg); flex:none;
   }
   .brand-text{ line-height:1.15; }
   .brand-text .name{ font-family:"Manrope"; font-weight:800; font-size:15px; letter-spacing:.02em; color:#fff; }
@@ -349,7 +354,8 @@
     .fin-foot{ padding:14px 18px 18px; }
   }
 </style>
-
+</head>
+<body>
 <div class="masthead">
   <div class="masthead-inner wrap" style="max-width:960px;margin:0 auto;padding-left:20px;padding-right:20px;">
     <div class="brand">
@@ -683,3 +689,5 @@
   </footer>
 
 </main>
+</body>
+</html>
